@@ -1,0 +1,27 @@
+{
+  "name": "code-coverage",
+  "version": "0.0.1",
+  "description": "test project for code coverage",
+  "main": "server/index.js",
+  "scripts": {
+    "coverage": "istanbul cover _mocha ./server -x ./unittests -- unittests -R spec",
+    "run": "node server/index.js",
+    "test": "mocha unittests --recursive"
+  },
+  "author": "sarkiroka",
+  "license": "ISC",
+  "devDependencies": {
+    "expectations": "^0.5.2",
+    "istanbul": "^0.4.2",
+    "mocha": "^2.4.5",
+    "sandboxed-module": "^2.0.3",
+    "sinon": "^1.17.3"
+  },
+  "dependencies": {
+    "debug": "^2.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:sarkiroka/sandbox.git"
+  }
+}
