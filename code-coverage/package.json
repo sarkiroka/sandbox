@@ -4,9 +4,9 @@
   "description": "test project for code coverage",
   "main": "server/index.js",
   "scripts": {
-    "coverage": "istanbul cover _mocha -x unittests/*.js -- unittests -R spec",
-    "run": "node server/index.js",
-    "test": "mocha unittests --recursive"
+    "coverage": "istanbul cover _mocha -x tests/*.js -- tests --recursive -R spec",
+    "start": "node server/index.js",
+    "test": "mocha tests --recursive"
   },
   "author": "sarkiroka",
   "license": "ISC",
@@ -15,10 +15,12 @@
     "istanbul": "^0.4.2",
     "mocha": "^2.4.5",
     "sandboxed-module": "^2.0.3",
-    "sinon": "^1.17.3"
+    "sinon": "^1.17.3",
+    "supertest": "^1.2.0"
   },
   "dependencies": {
-    "debug": "^2.2.0"
+    "debug": "^2.2.0",
+    "express": "^4.13.4"
   },
   "repository": {
     "type": "git",
