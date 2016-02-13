@@ -4,7 +4,7 @@
   "description": "test project for code coverage",
   "main": "server/index.js",
   "scripts": {
-    "coverage": "istanbul cover _mocha ./server -x ./unittests -- unittests -R spec",
+    "coverage": "istanbul cover _mocha -x unittests/*.js -- unittests -R spec",
     "run": "node server/index.js",
     "test": "mocha unittests --recursive"
   },

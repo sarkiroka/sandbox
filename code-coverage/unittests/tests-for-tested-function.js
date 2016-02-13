@@ -8,6 +8,7 @@ describe('the tests', function () {
 		'./untested-function': function (a) {return a==1?MOCK_VALUE:null;},
 		'debug': function () {return sinon.stub();}
 	};
+	sandboxedModule.registerBuiltInSourceTransformer('istanbul');
 	var testfile = sandboxedModule.require('../server/tested-function', {
 		requires: requires,
 		sourceTransformers: require('./fix')
