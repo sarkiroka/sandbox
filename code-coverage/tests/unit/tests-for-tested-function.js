@@ -9,9 +9,9 @@ describe('the tests', function () {
 		'debug': function () {return sinon.stub();}
 	};
 	sandboxedModule.registerBuiltInSourceTransformer('istanbul');
-	var testfile = sandboxedModule.require('../server/tested-function', {
+	var testfile = sandboxedModule.require('../../server/tested-function', {
 		requires: requires,
-		sourceTransformers: require('./fix')
+		sourceTransformers: require('./../fix')
 	});
 
 	it('should execute the IF true branch', function () {
