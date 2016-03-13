@@ -1,0 +1,25 @@
+{
+  "name": "async",
+  "version": "0.0.0",
+  "description": "-",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sarkiroka/sandbox.git"
+  },
+  "keywords": [
+    "async"
+  ],
+  "author": "sarkiroka",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sarkiroka/sandbox/issues"
+  },
+  "homepage": "https://github.com/sarkiroka/sandbox#readme",
+  "dependencies": {
+    "debug": "^2.2.0"
+  }
+}
