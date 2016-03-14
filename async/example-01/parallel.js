@@ -3,9 +3,9 @@
  */
 var debug = require('debug')('sandbox:async:example-01:parallel');
 module.exports = function (params, callback) {
-	setTimeout(function () {
-		debug('add 10');
-		params.result.sum += 10;
-		callback(null, params);
-	}, 500);
+	//setTimeout(function () {
+	debug('add 10');
+	params.result.sum += 10;
+	callback(null, params);
+	//}, 500);
 };
