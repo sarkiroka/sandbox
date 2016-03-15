@@ -11,9 +11,11 @@ module.exports = function () {
 	debug('start');
 	async(
 		{result: {}},
-		[prepare,
+		[
+			prepare,
 			[parallel1, parallel2],
-			end],
+			end
+		],
 		function (err, allresult) {
 			debug('all ended');
 			console.log(allresult.result);
