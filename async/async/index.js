@@ -2,6 +2,11 @@
  * @author sarkiroka on 2016.03.13.
  */
 var debug = require('debug')('sandbox:async:async');
+if (typeof setImmediate != 'function') {
+	setImmediate = function (fn) {
+		setTimeout(fn, 0);
+	}
+}
 module.exports = function (initial, tasks, end) {
 	debug('run async');
 	for (var i = 0; i < tasks.length; i++) {
