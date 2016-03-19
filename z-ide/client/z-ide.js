@@ -6,20 +6,34 @@ zIDE
 
 		canvas.init($scope);
 
-		addBox('egyik', 20, 20, function () {
+		addBox(0, 'egyik', 20, 20, function () {
 			console.log('itt')
 		});
-		addBox('másik', 320, 120, function () {
+		addBox(0, 'másik', 320, 120, function () {
 			console.log('ott')
+		});
+		addBox(1, 'benne', 220, 70, function () {
+			console.log('zoom')
 		});
 
 		//TODO separate by functions
 
-		function addBox(name, x, y, onclick) {
-			if (typeof $scope.objects[$scope.currentLevel] == 'undefined') {
-				$scope.objects[$scope.currentLevel] = [];
+		function addBox(level, name, x, y, onclick) {
+			if (typeof $scope.objects[level + ''] == 'undefined') {
+				$scope.objects[level + ''] = [];
 			}
-			$scope.objects[$scope.currentLevel].push({name: name, x: x, y: y, w: 150, h: 200, onclick: onclick});
+			$scope.objects[level + ''].push({name: name, x: x, y: y, w: 150, h: 200, onclick: onclick});
+			canvas.redraw();
+		}
+
+		canvas.registerZoom(onZoom);
+
+		function onZoom(direction) {
+			if (direction > 0) {
+				$scope.currentLevel++;
+			} else {
+				$scope.currentLevel--;
+			}
 			canvas.redraw();
 		}
 
@@ -57,7 +71,7 @@ zIDE
 				canvasElement.addEventListener('click', canvasService.handleCanvasClick);
 			},
 			handleCanvasClick: function handleCanvasClick(e) {
-				canvas.iterateOnAllCurrentLevelItem(function (shape) {
+				canvasService.iterateOnAllCurrentLevelItem(function (shape) {
 					if (canvasService.isIn(e.clientX, e.clientY, shape)) {
 						shape.onclick();
 					}
@@ -67,17 +81,35 @@ zIDE
 				return x > shape.x && x < shape.x + shape.w && y > shape.y && y < shape.y + shape.h;
 			},
 			redraw: function redraw() {
+				console.log('redraw on ', $scope.currentLevel);
+				canvasService.clear();
+				ctx.beginPath();
 				canvasService.iterateOnAllCurrentLevelItem(function (shape) {
 					ctx.rect(shape.x, shape.y, shape.w, shape.h);
 				});
 				ctx.stroke();
+				ctx.closePath();
 			},
 			iterateOnAllCurrentLevelItem: function iterateOnAllCurrentLevelItem(eachCallback) {
-				if (typeof $scope.objects[$scope.currentLevel] == 'object') {
-					for (var i = 0, iMax = $scope.objects[$scope.currentLevel].length; i < iMax; i++) {
-						var shape = $scope.objects[$scope.currentLevel][i];
+				if (typeof $scope.objects[$scope.currentLevel + ''] == 'object') {
+					for (var i = 0, iMax = $scope.objects[$scope.currentLevel + ''].length; i < iMax; i++) {
+						var shape = $scope.objects[$scope.currentLevel + ''][i];
 						eachCallback(shape);
 					}
+				}
+			},
+			clear: function clear() {
+				ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+			},
+			registerZoom: function registerZoom(onZoom) {
+				ctx.canvas.addEventListener('DOMMouseScroll', handleScroll);
+				ctx.canvas.addEventListener('mousewheel', handleScroll)
+				function handleScroll(e) {
+					var delta = e.wheelDelta ? e.wheelDelta / 40 : e.detail ? -e.detail : 0;
+					if (delta) {
+						onZoom(delta);
+					}
+					e.preventDefault();
 				}
 			}
 		};
