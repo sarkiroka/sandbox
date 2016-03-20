@@ -6,21 +6,20 @@ zIDE
 
 		canvas.init($scope);
 
-		addBox(0, 'egyik', 20, 20, function () {
-			console.log('itt')
-		});
-		addBox(0, 'másik', 320, 120, function () {
-			console.log('ott')
-		});
-		addBox(1, 'benne', 220, 70, function () {
-			console.log('zoom')
-		});
+		addBox(0, 'egyik', 20, 20);
+		addBox(0, 'másik', 320, 120);
+		addBox(1, 'benne', 220, 70);
 
 		//TODO separate by functions
 
 		function addBox(level, name, x, y, onclick) {
 			if (typeof $scope.objects[level + ''] == 'undefined') {
 				$scope.objects[level + ''] = [];
+			}
+			if (typeof onclick == 'undefined') {
+				onclick = function () {
+					console.log(this.name);
+				}
 			}
 			$scope.objects[level + ''].push({name: name, x: x, y: y, w: 150, h: 200, onclick: onclick});
 			canvas.redraw();
@@ -73,7 +72,7 @@ zIDE
 			handleCanvasClick: function handleCanvasClick(e) {
 				canvasService.iterateOnAllCurrentLevelItem(function (shape) {
 					if (canvasService.isIn(e.clientX, e.clientY, shape)) {
-						shape.onclick();
+						shape.onclick.call(shape);
 					}
 				});
 			},
