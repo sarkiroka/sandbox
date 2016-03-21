@@ -21,9 +21,10 @@ zIDE
 					(function (shape) {
 						setTimeout(function () {//csak hogy aszinron legyen a későbbiek miatt
 							var newName = prompt('Mi legyen az új név?', shape.name);
-							var oldName = shape.name;
-							shape.name = newName;
-							console.log('renamed', oldName, shape.name);
+							if (typeof newName == 'string') {
+								shape.name = newName;
+								canvas.redraw();
+							}
 						}, 1);
 					})(this);
 				}
@@ -52,6 +53,7 @@ zIDE
 		var canvasService = {
 			init: function init(scope) {
 				ctx = canvasService.getCanvasContext();
+				ctx.font = '12px Arial';
 				$scope = scope;
 				canvasService.handleResizeEvent();
 				canvasService.observeClickEvent();
@@ -90,8 +92,10 @@ zIDE
 				console.log('redraw on ', $scope.currentLevel);
 				canvasService.clear();
 				ctx.beginPath();
+				ctx.textBaseline = 'top';//nem lehet csak init-nél használni
 				canvasService.iterateOnAllCurrentLevelItem(function (shape) {
 					ctx.rect(shape.x, shape.y, shape.w, shape.h);
+					ctx.fillText(shape.name, shape.x + 5, shape.y + 5);
 				});
 				ctx.stroke();
 				ctx.closePath();
