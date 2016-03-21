@@ -18,7 +18,14 @@ zIDE
 			}
 			if (typeof onclick == 'undefined') {
 				onclick = function () {
-					console.log(this.name);
+					(function (shape) {
+						setTimeout(function () {//csak hogy aszinron legyen a későbbiek miatt
+							var newName = prompt('Mi legyen az új név?', shape.name);
+							var oldName = shape.name;
+							shape.name = newName;
+							console.log('renamed', oldName, shape.name);
+						}, 1);
+					})(this);
 				}
 			}
 			$scope.objects[level + ''].push({name: name, x: x, y: y, w: 150, h: 200, onclick: onclick});
