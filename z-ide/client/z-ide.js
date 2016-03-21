@@ -93,16 +93,33 @@ zIDE
 						drag = {
 							shape: shape,
 							dx: e.clientX - shape.x,
-							dy: e.clientY - shape.y
+							dy: e.clientY - shape.y,
+							originalX: shape.x,
+							originalY: shape.y
 						};
 					}
 				});
 			},
 			handleCanvasMouseUp: function handleCanvasMouseUp(e) {
-				drag = false;
-				setTimeout(function () {
+				if (canvasService.isIgnorableMovement()) {
+					canvasService.restoreDargBeforePosition();
 					canEdit = true;
-				}, 100);
+				} else {
+					setTimeout(function () {
+						canEdit = true;
+					}, 100);
+				}
+				drag = false;
+			},
+			restoreDargBeforePosition: function restoreDargBeforePosition() {
+				drag.shape.x = drag.originalX;
+				drag.shape.y = drag.originalY;
+				canvasService.redraw();
+			},
+			isIgnorableMovement: function isIgnorableMovement() {
+				var dx = Math.abs(drag.originalX - drag.shape.x);
+				var dy = Math.abs(drag.originalY - drag.shape.y);
+				return dx + dy < 5;
 			},
 			handleCanvasMouseMove: function handleCanvasMouseMove(e) {
 				if (drag) {
