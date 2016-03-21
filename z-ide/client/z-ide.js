@@ -50,6 +50,8 @@ zIDE
 	.factory('canvas', [function () {
 		var ctx = null;
 		var $scope;
+		var drag = false;
+		var canEdit = true;
 		var canvasService = {
 			init: function init(scope) {
 				ctx = canvasService.getCanvasContext();
@@ -57,6 +59,7 @@ zIDE
 				$scope = scope;
 				canvasService.handleResizeEvent();
 				canvasService.observeClickEvent();
+				canvasService.observeDragEvent();
 			},
 			getCanvasElement: function getCanvasElement() {
 				return document.getElementById('z-ide');
@@ -78,12 +81,45 @@ zIDE
 				var canvasElement = canvasService.getCanvasElement();
 				canvasElement.addEventListener('click', canvasService.handleCanvasClick);
 			},
-			handleCanvasClick: function handleCanvasClick(e) {
+			observeDragEvent: function observeDragEvent() {
+				var canvasElement = canvasService.getCanvasElement();
+				canvasElement.addEventListener('mousedown', canvasService.handleCanvasMouseDown);
+				canvasElement.addEventListener('mousemove', canvasService.handleCanvasMouseMove);
+				canvasElement.addEventListener('mouseup', canvasService.handleCanvasMouseUp);
+			},
+			handleCanvasMouseDown: function handleCanvasMouseDown(e) {
 				canvasService.iterateOnAllCurrentLevelItem(function (shape) {
 					if (canvasService.isIn(e.clientX, e.clientY, shape)) {
-						shape.onclick.call(shape);
+						drag = {
+							shape: shape,
+							dx: e.clientX - shape.x,
+							dy: e.clientY - shape.y
+						};
 					}
 				});
+			},
+			handleCanvasMouseUp: function handleCanvasMouseUp(e) {
+				drag = false;
+				setTimeout(function () {
+					canEdit = true;
+				}, 100);
+			},
+			handleCanvasMouseMove: function handleCanvasMouseMove(e) {
+				if (drag) {
+					drag.shape.x = e.clientX - drag.dx;
+					drag.shape.y = e.clientY - drag.dy;
+					canEdit = false;
+					canvasService.redraw();
+				}
+			},
+			handleCanvasClick: function handleCanvasClick(e) {
+				if (canEdit) {
+					canvasService.iterateOnAllCurrentLevelItem(function (shape) {
+						if (canvasService.isIn(e.clientX, e.clientY, shape)) {
+							shape.onclick.call(shape);
+						}
+					});
+				}
 			},
 			isIn: function isIn(x, y, shape) {
 				return x > shape.x && x < shape.x + shape.w && y > shape.y && y < shape.y + shape.h;
