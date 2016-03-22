@@ -8,4 +8,4 @@ app.use(express.static(path.normalize(path.join(__dirname, '..', 'client'))));
 app.use('*', function (req, res, next) {
 	res.redirect('/z-ide.html');
 });
-app.listen(3000);
+app.listen(3030);
