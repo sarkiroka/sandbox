@@ -101,20 +101,24 @@ zIDE
 				});
 			},
 			handleCanvasMouseUp: function handleCanvasMouseUp(e) {
-				if (canvasService.isIgnorableMovement()) {
-					canvasService.restoreDargBeforePosition();
-					canEdit = true;
-				} else {
-					setTimeout(function () {
+				if (drag) {
+					if (canvasService.isIgnorableMovement()) {
+						canvasService.restoreDargBeforePosition();
 						canEdit = true;
-					}, 100);
+					} else {
+						setTimeout(function () {
+							canEdit = true;
+						}, 100);
+					}
+					drag = false;
 				}
-				drag = false;
 			},
 			restoreDargBeforePosition: function restoreDargBeforePosition() {
-				drag.shape.x = drag.originalX;
-				drag.shape.y = drag.originalY;
-				canvasService.redraw();
+				if (drag) {
+					drag.shape.x = drag.originalX;
+					drag.shape.y = drag.originalY;
+					canvasService.redraw();
+				}
 			},
 			isIgnorableMovement: function isIgnorableMovement() {
 				var dx = Math.abs(drag.originalX - drag.shape.x);
@@ -146,11 +150,17 @@ zIDE
 				canvasService.clear();
 				ctx.beginPath();
 				ctx.textBaseline = 'top';//nem lehet csak init-nél használni
+				var s=['#777777','#CCCCCC'];
+				var i=0;
 				canvasService.iterateOnAllCurrentLevelItem(function (shape) {
+					ctx.fillStyle=s[i];
+					i++;
+					ctx.fillRect(shape.x, shape.y, shape.w, shape.h);
+					ctx.fillStyle='#000000';
 					ctx.rect(shape.x, shape.y, shape.w, shape.h);
+					ctx.stroke();
 					ctx.fillText(shape.name, shape.x + 5, shape.y + 5);
 				});
-				ctx.stroke();
 				ctx.closePath();
 			},
 			iterateOnAllCurrentLevelItem: function iterateOnAllCurrentLevelItem(eachCallback) {
