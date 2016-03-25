@@ -41,7 +41,7 @@ canvas.observeDragEvent= function observeDragEvent() {
 canvas.handleCanvasMouseDown= function handleCanvasMouseDown(e) {
 	canvas.iterateOnAllCurrentLevelItem(function (shape) {
 		if (canvas.isIn(e.clientX, e.clientY, shape)) {
-			drag = {
+			canvas.drag = {
 				shape: shape,
 				dx: e.clientX - shape.x,
 				dy: e.clientY - shape.y,
@@ -53,8 +53,8 @@ canvas.handleCanvasMouseDown= function handleCanvasMouseDown(e) {
 	});
 };
 canvas.handleCanvasMouseUp= function handleCanvasMouseUp(e) {
-	if (drag) {
-		delete drag.shape.current;
+	if (canvas.drag) {
+		delete canvas.drag.shape.current;
 		canvas.redraw();
 		if (canvas.isIgnorableMovement()) {
 			canvas.restoreDargBeforePosition();
@@ -64,25 +64,25 @@ canvas.handleCanvasMouseUp= function handleCanvasMouseUp(e) {
 				canEdit = true;
 			}, 100);
 		}
-		drag = false;
+		canvas.drag = false;
 	}
 };
 canvas.restoreDargBeforePosition= function restoreDargBeforePosition() {
-	if (drag) {
-		drag.shape.x = drag.originalX;
-		drag.shape.y = drag.originalY;
+	if (canvas.drag) {
+		canvas.drag.shape.x = canvas.drag.originalX;
+		canvas.drag.shape.y = canvas.drag.originalY;
 		canvas.redraw();
 	}
 };
 canvas.isIgnorableMovement= function isIgnorableMovement() {
-	var dx = Math.abs(drag.originalX - drag.shape.x);
-	var dy = Math.abs(drag.originalY - drag.shape.y);
+	var dx = Math.abs(canvas.drag.originalX - canvas.drag.shape.x);
+	var dy = Math.abs(canvas.drag.originalY - canvas.drag.shape.y);
 	return dx + dy < 5;
 };
 canvas.handleCanvasMouseMove= function handleCanvasMouseMove(e) {
-	if (drag) {
-		drag.shape.x = e.clientX - drag.dx;
-		drag.shape.y = e.clientY - drag.dy;
+	if (canvas.drag) {
+		canvas.drag.shape.x = e.clientX - canvas.drag.dx;
+		canvas.drag.shape.y = e.clientY - canvas.drag.dy;
 		canEdit = false;
 		canvas.redraw();
 	}
