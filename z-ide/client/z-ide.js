@@ -7,6 +7,7 @@ window.addEventListener('load', function () {
 
 	addBox(0, 'egyik', 20, 20);
 	addBox(0, 'másik', 320, 120);
+	addBox(0, 'harmadik', 120, 200);
 	addBox(1, 'benne', 220, 70);
 
 	//TODO separate by functions
