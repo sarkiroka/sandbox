@@ -1,10 +1,10 @@
-function canvas(){
+function canvas() {
 	var ctx = null;
 	var $scope;
 	var drag = false;
 	var canEdit = true;
 }
-canvas.init= function init(scope) {
+canvas.init = function init(scope) {
 	ctx = canvas.getCanvasContext();
 	ctx.font = '12px Arial';
 	$scope = scope;
@@ -12,33 +12,33 @@ canvas.init= function init(scope) {
 	canvas.observeClickEvent();
 	canvas.observeDragEvent();
 };
-canvas.getCanvasElement= function getCanvasElement() {
+canvas.getCanvasElement = function getCanvasElement() {
 	return document.getElementById('z-ide');
 };
-canvas.getCanvasContext= function getCanvasContext() {
+canvas.getCanvasContext = function getCanvasContext() {
 	var canvasElement = canvas.getCanvasElement();
 	return canvasElement.getContext('2d');
 };
-canvas.handleResizeEvent= function handleResizeEvent() {
+canvas.handleResizeEvent = function handleResizeEvent() {
 	window.addEventListener('resize', canvas.viewPortWasResized);
 	canvas.viewPortWasResized();
 };
-canvas.viewPortWasResized= function viewPortWasResized() {
+canvas.viewPortWasResized = function viewPortWasResized() {
 	ctx.canvas.height = window.innerHeight;
 	ctx.canvas.width = window.innerWidth;
 	canvas.redraw();
 };
-canvas.observeClickEvent= function observeClickEvent() {
+canvas.observeClickEvent = function observeClickEvent() {
 	var canvasElement = canvas.getCanvasElement();
 	canvasElement.addEventListener('click', canvas.handleCanvasClick);
 };
-canvas.observeDragEvent= function observeDragEvent() {
+canvas.observeDragEvent = function observeDragEvent() {
 	var canvasElement = canvas.getCanvasElement();
 	canvasElement.addEventListener('mousedown', canvas.handleCanvasMouseDown);
 	canvasElement.addEventListener('mousemove', canvas.handleCanvasMouseMove);
 	canvasElement.addEventListener('mouseup', canvas.handleCanvasMouseUp);
 };
-canvas.handleCanvasMouseDown= function handleCanvasMouseDown(e) {
+canvas.handleCanvasMouseDown = function handleCanvasMouseDown(e) {
 	canvas.iterateOnAllCurrentLevelItem(function (shape) {
 		if (canvas.isIn(e.clientX, e.clientY, shape)) {
 			canvas.drag = {
@@ -49,10 +49,11 @@ canvas.handleCanvasMouseDown= function handleCanvasMouseDown(e) {
 				originalY: shape.y
 			};
 			shape.current = true;
+			return true;
 		}
 	});
 };
-canvas.handleCanvasMouseUp= function handleCanvasMouseUp(e) {
+canvas.handleCanvasMouseUp = function handleCanvasMouseUp(e) {
 	if (canvas.drag) {
 		delete canvas.drag.shape.current;
 		canvas.redraw();
@@ -67,19 +68,19 @@ canvas.handleCanvasMouseUp= function handleCanvasMouseUp(e) {
 		canvas.drag = false;
 	}
 };
-canvas.restoreDargBeforePosition= function restoreDargBeforePosition() {
+canvas.restoreDargBeforePosition = function restoreDargBeforePosition() {
 	if (canvas.drag) {
 		canvas.drag.shape.x = canvas.drag.originalX;
 		canvas.drag.shape.y = canvas.drag.originalY;
 		canvas.redraw();
 	}
 };
-canvas.isIgnorableMovement= function isIgnorableMovement() {
+canvas.isIgnorableMovement = function isIgnorableMovement() {
 	var dx = Math.abs(canvas.drag.originalX - canvas.drag.shape.x);
 	var dy = Math.abs(canvas.drag.originalY - canvas.drag.shape.y);
 	return dx + dy < 5;
 };
-canvas.handleCanvasMouseMove= function handleCanvasMouseMove(e) {
+canvas.handleCanvasMouseMove = function handleCanvasMouseMove(e) {
 	if (canvas.drag) {
 		canvas.drag.shape.x = e.clientX - canvas.drag.dx;
 		canvas.drag.shape.y = e.clientY - canvas.drag.dy;
@@ -87,7 +88,7 @@ canvas.handleCanvasMouseMove= function handleCanvasMouseMove(e) {
 		canvas.redraw();
 	}
 };
-canvas.handleCanvasClick= function handleCanvasClick(e) {
+canvas.handleCanvasClick = function handleCanvasClick(e) {
 	if (canEdit) {
 		canvas.iterateOnAllCurrentLevelItem(function (shape) {
 			if (canvas.isIn(e.clientX, e.clientY, shape)) {
@@ -96,10 +97,10 @@ canvas.handleCanvasClick= function handleCanvasClick(e) {
 		});
 	}
 };
-canvas.isIn= function isIn(x, y, shape) {
+canvas.isIn = function isIn(x, y, shape) {
 	return x > shape.x && x < shape.x + shape.w && y > shape.y && y < shape.y + shape.h;
 };
-canvas.redraw= function redraw() {
+canvas.redraw = function redraw() {
 	console.log('redraw on ', $scope.currentLevel);
 	canvas.clear();
 	ctx.textBaseline = 'top';//nem lehet csak init-nél használni
@@ -115,7 +116,7 @@ canvas.redraw= function redraw() {
 		canvas.drawShape(current);
 	}
 };
-canvas.drawShape= function drawShape(shape) {
+canvas.drawShape = function drawShape(shape) {
 	ctx.beginPath();
 	ctx.fillStyle = '#ccc';
 	ctx.fillRect(shape.x, shape.y, shape.w, shape.h);
@@ -125,18 +126,21 @@ canvas.drawShape= function drawShape(shape) {
 	ctx.fillText(shape.name, shape.x + 5, shape.y + 5);
 	ctx.closePath();
 };
-canvas.iterateOnAllCurrentLevelItem= function iterateOnAllCurrentLevelItem(eachCallback) {
+canvas.iterateOnAllCurrentLevelItem = function iterateOnAllCurrentLevelItem(eachCallback) {
 	if (typeof $scope.objects[$scope.currentLevel + ''] == 'object') {
 		for (var i = 0, iMax = $scope.objects[$scope.currentLevel + ''].length; i < iMax; i++) {
 			var shape = $scope.objects[$scope.currentLevel + ''][i];
-			eachCallback(shape);
+			var needStop = eachCallback(shape);
+			if (needStop) {
+				break;
+			}
 		}
 	}
 };
-canvas.clear= function clear() {
+canvas.clear = function clear() {
 	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 };
-canvas.registerZoom= function registerZoom(onZoom) {
+canvas.registerZoom = function registerZoom(onZoom) {
 	ctx.canvas.addEventListener('DOMMouseScroll', handleScroll);
 	ctx.canvas.addEventListener('mousewheel', handleScroll)
 	function handleScroll(e) {
