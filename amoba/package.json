@@ -1,0 +1,29 @@
+{
+  "name": "amoba",
+  "version": "0.1.0",
+  "description": "amoba jatek",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sarkiroka/sandbox.git"
+  },
+  "keywords": [
+    "amoba",
+    "socket",
+    "game"
+  ],
+  "author": "sarkiroka",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sarkiroka/sandbox/issues"
+  },
+  "homepage": "https://github.com/sarkiroka/sandbox/amoba",
+  "dependencies": {
+    "express": "^4.13.4",
+    "pug": "^2.0.0-alpha8"
+  }
+}
