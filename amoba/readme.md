@@ -1,6 +1,60 @@
 # Amőba játék
 
-## v0.2.0
+## v0.3.0 Design
+
+* download
+	[bootstrap](https://github.com/twbs/bootstrap/releases/download/v3.3.6/bootstrap-3.3.6-dist.zip)
+
+
+* unzip bootstrap.min.css from bootstrap.zip to `bootstrap.css`
+
+
+* style.css
+	```css
+	html, body {
+		background: lightgray;
+		height: 100%
+	}
+
+	.vertical-center {
+		min-height: 100%; /* Fallback for browsers do NOT support vh unit */
+		min-height: 100vh; /* These two lines are counted as one :-)       */
+		display: flex;
+		align-items: center;
+	}
+
+	.shadow {
+		box-shadow: 5px 7px 4px 4px #aaa;
+	}
+	```
+
+
+* index.pug
+	```jade
+	html
+		head
+			title Amőba játék
+			link(rel="stylesheet", href="bootstrap.css")
+			link(rel="stylesheet", href="style.css")
+			script(src="io.js")
+			script(src="client.js")
+
+		body
+			.col-sm-6.col-md-4.col-md-offset-4.vertical-center
+				form.panel.panel-info.shadow
+					.panel-heading
+						.text-center Amőba
+					.panel-body
+						.input-group
+							input.form-control(name="name", type='text', placeholder='Név...', autofocus="")
+							span.input-group-btn
+								button.btn.btn-primary(type='submit') Belépés
+	```
+
+
+---
+
+## v0.2.0 - Socket
 
 * command line
 	```DOS
@@ -52,7 +106,7 @@
 
 ---
 
-## v0.1.0
+## v0.1.0 - Alapok
 
 * server.js
 	```javascript

@@ -1,8 +1,18 @@
 html
 	head
 		title Amőba játék
+		link(rel="stylesheet", href="bootstrap.css")
+		link(rel="stylesheet", href="style.css")
 		script(src="io.js")
 		script(src="client.js")
 
 	body
-		h1 Amőba játék
+		.col-sm-6.col-md-4.col-md-offset-4.vertical-center
+			form.panel.panel-info.shadow
+				.panel-heading
+					.text-center Amőba
+				.panel-body
+					.input-group
+						input.form-control(name="name", type='text', placeholder='Név...', autofocus="")
+						span.input-group-btn
+							button.btn.btn-primary(type='submit') Belépés
