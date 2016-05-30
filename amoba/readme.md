@@ -1,5 +1,89 @@
 # Amőba játék
 
+## v0.4.0 Authenticate
+
+* download
+	[angular](https://code.angularjs.org/1.5.6/angular.min.js)
+	and copy to `angular.js`
+
+
+* client.js
+	```
+	var SFKB=angular.module('sfkb',[]);
+	SFKB.controller('amoba', ['$scope', function ($scope) {
+		$scope.login = function (name) {
+			socket.emit('username', name);
+			socket.on('username accepted', function (username) {
+				$scope.username = username;
+				$scope.$apply();
+			});
+			socket.on('username declined', function () {
+				delete $scope.username;
+				$scope.$apply();
+			});
+		}
+	}]);
+	```
+
+
+* server.js
+	```
+	var sockets = {};
+	var users = {};
+
+	//on disconnect
+	delete sockets[socket.id];
+
+	//on test
+	socket.emit('message', msg + 1);
+
+	//on username received
+	socket.on('username', function (msg) {
+		var validRegex = /^[a-zíéáűőúöüóÍÉÁŰŐÚÖÜÓ]+(?:-\d+)?/i;
+		if (validRegex.test(msg)) {
+			if (!users[msg]) {
+				sockets[socket.id] = {username: msg};
+				users[msg] = {socket: socket.id};
+				socket.emit('username accepted', msg);
+			} else {
+				var namePartsRegex = /^(.+)-(\d+)$/;
+				var baseName = msg;
+				var counter = 0;
+				var hasCounter = namePartsRegex.test(msg)
+				if (hasCounter) {
+					var matches = msg.match(namePartsRegex);
+					baseName = matches[1];
+					counter = parseInt(matches[2], 10);
+				}
+				do {
+					counter++;
+					var newName = baseName + '-' + counter;
+				} while (users[newName]);
+				sockets[socket.id] = {username: newName};
+				users[newName] = {socket: socket.id};
+				socket.emit('username accepted', newName);
+			}
+		} else {
+			socket.emit('username declined');
+		}
+	});
+	```
+
+
+* index.pug
+	```
+	html(data-ng-app="sfkb")
+	...
+	script(src="angular.js")
+	...
+	body(data-ng-controller="amoba")
+	...
+	input(... data-ng-model="name" ...)
+	button(... data-ng-click="login(name)" ...)
+	```
+
+---
+
 ## v0.3.0 Design
 
 * download

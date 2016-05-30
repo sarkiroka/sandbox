@@ -1,18 +1,20 @@
-html
+html(data-ng-app="sfkb")
 	head
 		title Amőba játék
 		link(rel="stylesheet", href="bootstrap.css")
 		link(rel="stylesheet", href="style.css")
 		script(src="io.js")
+		script(src="angular.js")
 		script(src="client.js")
 
-	body
-		.col-sm-6.col-md-4.col-md-offset-4.vertical-center
+	body(data-ng-controller="amoba")
+		.col-sm-6.col-md-4.col-md-offset-4.vertical-center(data-ng-show="!username")
 			form.panel.panel-info.shadow
 				.panel-heading
 					.text-center Amőba
 				.panel-body
 					.input-group
-						input.form-control(name="name", type='text', placeholder='Név...', autofocus="")
+						input.form-control(name="name", data-ng-model="name", type='text', placeholder='Név...', autofocus="")
 						span.input-group-btn
-							button.btn.btn-primary(type='submit') Belépés
+							button.btn.btn-primary(type='submit', data-ng-click="login(name)") Belépés
+
