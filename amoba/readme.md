@@ -1,5 +1,101 @@
 # Amőba játék
 
+## v0.5.0 Connection
+
+* download woff
+
+
+* index.pug
+	```
+	...
+	data-ng-show="!state"
+	...
+	.col-sm-6.col-md-4.col-md-offset-4.vertical-center(data-ng-show="state=='noop'")
+		.list-group(data-ng-show="userlist")
+			a.list-group-item(data-ng-repeat="user in userlist", data-ng-click="challenge(user)", data-ng-class="{disabled:user==username}") {{user}}
+				span(data-ng-if="user==username") (én)
+	.col-sm-6.col-md-4.bottom(data-ng-show="state=='noop' && challengers")
+		.list-group
+			.list-group-item(data-ng-repeat="user in challengers")
+				span {{user}}
+				a.green.glyphicon.glyphicon-ok(data-ng-click="challengeAccepted(user)")
+				a.red.glyphicon.glyphicon-remove(data-ng-click="challengeRejected(user)")
+	.col-lg-12.col-md-12.col-sm-12(data-ng-show="state=='game'")
+		.content játék!
+	```
+
+
+* server.js
+	```
+	...
+	var roomCount=0;
+	...
+	var user = sockets[socket.id];
+	if (user) {
+		delete users[user.username];
+	}
+	...
+	//on username
+	io.sockets.emit('userlist', Object.keys(users));
+	...
+	io.sockets.emit('userlist', Object.keys(users));
+	...
+	socket.on('challenge', function (user) {
+		if (users[user]) {
+			users[user].socket.emit('challenge', sockets[socket.id].username);
+		}
+	});
+	socket.on('challenge accepted', function (user) {
+		var thisUser = users[socket.id];
+		var thatUser = user;
+		var roomName = 'room_'+roomCount;
+		roomCount++;
+		socket.join(roomName);
+		users[thatUser].socket.join(roomName);
+		io.sockets.in(roomName).emit('game','started');
+	});
+	```
+
+
+* client.js
+	```
+	...
+	$scope.challenge = function (user) {
+		socket.emit('challenge', user);
+	};
+	$scope.challengers = [];
+	$scope.challengeAccepted = function (acceptedUser) {
+		for (var i = 0; i < $scope.challengers.length; i++) {
+			var user = $scope.challengers[i];
+			$scope.challengeRejected(user);
+		}
+		socket.emit('challenge accepted', acceptedUser);
+	};
+	$scope.challengeRejected = function (user) {
+		socket.emit('challenge rejected', user);
+	};
+	...
+	//on accept
+	$scope.state = 'noop';
+	...
+	socket.on('userlist', function (userlist) {
+		$scope.userlist = userlist;
+		$scope.$apply();
+	});
+	socket.on('challenge', function (user) {
+		$scope.challengers.push(user);
+		$scope.$apply();
+	});
+	socket.on('game', function (msg) {
+		$scope.challengers = [];
+		$scope.state = 'game';
+		$scope.$apply();
+	})
+	```
+
+
+
+
 ## v0.4.0 Authenticate
 
 * download

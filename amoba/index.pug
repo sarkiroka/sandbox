@@ -8,7 +8,7 @@ html(data-ng-app="sfkb")
 		script(src="client.js")
 
 	body(data-ng-controller="amoba")
-		.col-sm-6.col-md-4.col-md-offset-4.vertical-center(data-ng-show="!username")
+		.col-sm-6.col-md-4.col-md-offset-4.vertical-center(data-ng-show="!state")
 			form.panel.panel-info.shadow
 				.panel-heading
 					.text-center Amőba
@@ -17,4 +17,15 @@ html(data-ng-app="sfkb")
 						input.form-control(name="name", data-ng-model="name", type='text', placeholder='Név...', autofocus="")
 						span.input-group-btn
 							button.btn.btn-primary(type='submit', data-ng-click="login(name)") Belépés
-
+		.col-sm-6.col-md-4.col-md-offset-4.vertical-center(data-ng-show="state=='noop'")
+			.list-group(data-ng-show="userlist")
+				a.list-group-item(data-ng-repeat="user in userlist", data-ng-click="challenge(user)", data-ng-class="{disabled:user==username}") {{user}}
+					span(data-ng-if="user==username") (én)
+		.col-sm-6.col-md-4.bottom(data-ng-show="state=='noop' && challengers")
+			.list-group
+				.list-group-item(data-ng-repeat="user in challengers")
+					span {{user}}
+					a.green.glyphicon.glyphicon-ok(data-ng-click="challengeAccepted(user)")
+					a.red.glyphicon.glyphicon-remove(data-ng-click="challengeRejected(user)")
+		.col-lg-12.col-md-12.col-sm-12(data-ng-show="state=='game'")
+			.content játék!
