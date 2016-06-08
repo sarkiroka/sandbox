@@ -28,4 +28,9 @@ html(data-ng-app="sfkb")
 					a.green.glyphicon.glyphicon-ok(data-ng-click="challengeAccepted(user)")
 					a.red.glyphicon.glyphicon-remove(data-ng-click="challengeRejected(user)")
 		.col-lg-12.col-md-12.col-sm-12(data-ng-show="state=='game'")
-			.content játék!
+			.content
+				.col-lg-12 {{game.room}}: {{game.users[0]}} - {{game.users[1]}}
+			table(data-ng-class="{disabled:!ownTurn}")
+				tr(data-ng-repeat="row in game.table track by $index")
+					td(data-ng-repeat="col in row track by $index", data-ng-click="put($index, $parent.$index)", data-ng-class="{blue:col=='X'}")
+						| {{col}}

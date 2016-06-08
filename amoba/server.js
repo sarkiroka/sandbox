@@ -10,7 +10,8 @@ app.get('/', function (req, res) {
 });
 var sockets = {};
 var users = {};
-var roomCount=0;
+var roomCount = 0;
+var games = {};
 io.on('connection', function (socket) {
 	socket.on('disconnect', function () {
 		var user = sockets[socket.id];
@@ -32,7 +33,7 @@ io.on('connection', function (socket) {
 				var namePartsRegex = /^(.+)-(\d+)$/;
 				var baseName = msg;
 				var counter = 0;
-				var hasCounter = namePartsRegex.test(msg)
+				var hasCounter = namePartsRegex.test(msg);
 				if (hasCounter) {
 					var matches = msg.match(namePartsRegex);
 					baseName = matches[1];
@@ -57,13 +58,23 @@ io.on('connection', function (socket) {
 		}
 	});
 	socket.on('challenge accepted', function (user) {
-		var thisUser = users[socket.id];
+		var thisUser = sockets[socket.id].username;
 		var thatUser = user;
 		var roomName = 'room_'+roomCount;
 		roomCount++;
 		socket.join(roomName);
 		users[thatUser].socket.join(roomName);
-		io.sockets.in(roomName).emit('game','started');
+		games[roomName] = {table: [], users: [thisUser, thatUser], room: roomName, step: 0};
+		io.sockets.in(roomName).emit('game', games[roomName]);
+	});
+	socket.on('put', function (msg) {
+		var room = msg.room;
+		if (games[room] && games[room].table[msg.y][msg.x] == ' ') {
+			var sign = games[room].step % 2 ? 'X' : 'O';
+			games[room].table[msg.y][msg.x] = sign;
+			games[room].step++;
+			io.sockets.in(room).emit('game', games[room]);
+		}
 	});
 });
 http.listen(2700);

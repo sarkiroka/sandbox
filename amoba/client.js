@@ -35,9 +35,16 @@ SFKB.controller('amoba', ['$scope', function ($scope) {
 		$scope.challengers.push(user);
 		$scope.$apply();
 	});
-	socket.on('game', function (msg) {
+	socket.on('game', function (game) {
 		$scope.challengers = [];
 		$scope.state = 'game';
+		$scope.game = game;
+		$scope.ownTurn = $scope.game.users[$scope.game.step % 2] == $scope.username;
 		$scope.$apply();
 	});
+	$scope.put = function (x, y) {
+		if ($scope.game.table[y][x] == ' ' && $scope.ownTurn) {
+			socket.emit('put', {x: x, y: y, room: $scope.game.room});
+		}
+	};
 }]);

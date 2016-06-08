@@ -1,5 +1,80 @@
 # Amőba játék
 
+## v0.6.0 Game
+
+* style.css
+	```
+	table, td {
+		border: 1px solid #888;
+	}
+
+	table.disabled {
+		opacity: 0.5;
+	}
+
+	td {
+		width: 25px;
+		height: 25px;
+		color: #f00;
+		text-align: center;
+		font-weight: bold;
+	}
+
+	td.blue {
+		color: #00f;
+	}
+
+	td:hover {
+		background: #aaa;
+	}
+	```
+
+
+* server.js
+	```
+	var games = {};
+	...
+	var thisUser = sockets[socket.id].username;
+
+	games[roomName] = {table: [], users: [thisUser, thatUser], room: roomName, step: 0};
+	io.sockets.in(roomName).emit('game', games[roomName]);
+	...
+	socket.on('put', function (msg) {
+		var room = msg.room;
+		if (games[room] && games[room].table[msg.y][msg.x] == ' ') {
+			var sign = games[room].step % 2 ? 'X' : 'O';
+			games[room].table[msg.y][msg.x] = sign;
+			games[room].step++;
+			io.sockets.in(room).emit('game', games[room]);
+		}
+	});
+	```
+
+
+* client.js
+	```
+	$scope.game = game;
+	$scope.ownTurn = $scope.game.users[$scope.game.step % 2] == $scope.username;
+	...
+	$scope.put = function (x, y) {
+		if ($scope.game.table[y][x] == ' ' && $scope.ownTurn) {
+			socket.emit('put', {x: x, y: y, room: $scope.game.room});
+		}
+	};
+	```
+
+
+* index.pug
+	```
+	.content
+		.col-lg-12 {{game.room}}: {{game.users[0]}} - {{game.users[1]}}
+	table(data-ng-class="{disabled:!ownTurn}")
+		tr(data-ng-repeat="row in game.table track by $index")
+			td(data-ng-repeat="col in row track by $index", data-ng-click="put($index, $parent.$index)", data-ng-class="{blue:col=='X'}")
+				| {{col}}
+	```
+
+
 ## v0.5.0 Connection
 
 * download woff

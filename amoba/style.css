@@ -13,3 +13,27 @@ html, body {
 .shadow {
 	box-shadow: 5px 7px 4px 4px #aaa;
 }
+
+table, td {
+	border: 1px solid #888;
+}
+
+table.disabled {
+	opacity: 0.5;
+}
+
+td {
+	width: 25px;
+	height: 25px;
+	color: #f00;
+	text-align: center;
+	font-weight: bold;
+}
+
+td.blue {
+	color: #00f;
+}
+
+td:hover {
+	background: #aaa;
+}
