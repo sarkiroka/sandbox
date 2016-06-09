@@ -1,5 +1,18 @@
 # Amőba játék
 
+## v0.8.0 "Bugfix"
+
+* a felhasználólistában nem látszik, hogy egy-egy játékos játszik-e vagy épp tétlen
+* nincs kezelve a kilépés minden esetben (pl leszakadás a hálózatról)
+* kimaradt a chat
+* nincs mód átnevezni magunkat, a rendszer fixen osztja ki a neveket
+* hosszú nevek kezelése sem megoldott
+* a játékhoz nem csatlakozhat néző
+* a játékban nem választható hogy ki kezd
+* a játékban nem választható a jel
+* stb.
+
+
 ## v0.7.0 "End"
 
 * style.css:
