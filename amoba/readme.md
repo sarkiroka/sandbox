@@ -1,5 +1,18 @@
 # Amőba játék
 
+## v0.7.0 "End"
+
+* style.css:
+	* popup ami közli hogy nyertünk vagy vesztettünk
+* client.js:
+	* "vége" üzenet kezelése
+* server.js:
+	* "put" kiegészítése azzal hogy számolja hogy nyert-e valaki
+	* ha nyert valaki, akkor "vége" üzenetet küldeni a nyertessel
+* index.pug:
+	* vége popup, melynek végén state állítás
+
+
 ## v0.6.0 Game
 
 * style.css
