@@ -1,5 +1,9 @@
 # Amőba játék
 
+## v0.9.0 Refactor
+
+
+
 ## v0.8.0 "Bugfix"
 
 * a felhasználólistában nem látszik, hogy egy-egy játékos játszik-e vagy épp tétlen

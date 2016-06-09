@@ -3,8 +3,8 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 app.set('view engine', 'pug');
-app.set('views', __dirname);
-app.use(express.static(__dirname));
+app.set('views', __dirname + '/../client/views');
+app.use('/static', express.static(__dirname + '/../client/static'));
 app.get('/', function (req, res) {
 	res.render('index')
 });
@@ -60,11 +60,18 @@ io.on('connection', function (socket) {
 	socket.on('challenge accepted', function (user) {
 		var thisUser = sockets[socket.id].username;
 		var thatUser = user;
-		var roomName = 'room_'+roomCount;
+		var roomName = 'room_' + roomCount;
 		roomCount++;
 		socket.join(roomName);
 		users[thatUser].socket.join(roomName);
-		games[roomName] = {table: [], users: [thisUser, thatUser], room: roomName, step: 0};
+		var table = [];
+		for (var i = 0; i < 10; i++) {
+			table.push([]);
+			for (var j = 0; j < 10; j++) {
+				table[i].push(' ');
+			}
+		}
+		games[roomName] = {table: table, users: [thisUser, thatUser], room: roomName, step: 0};
 		io.sockets.in(roomName).emit('game', games[roomName]);
 	});
 	socket.on('put', function (msg) {
