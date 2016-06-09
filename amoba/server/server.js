@@ -1,13 +1,6 @@
-var express = require('express');
-var app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-app.set('view engine', 'pug');
-app.set('views', __dirname + '/../client/views');
-app.use('/static', express.static(__dirname + '/../client/static'));
-app.get('/', function (req, res) {
-	res.render('index')
-});
+var startExpress = require('./start-express');
+var httpServer = startExpress();
+var io = require('socket.io')(httpServer);
 var sockets = {};
 var users = {};
 var roomCount = 0;
@@ -84,4 +77,3 @@ io.on('connection', function (socket) {
 		}
 	});
 });
-http.listen(2700);
