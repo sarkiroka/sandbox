@@ -1,4 +1,4 @@
-var startExpress = require('./start-express');
+var startExpress = require('./start-express/index');
 var httpServer = startExpress();
 var io = require('socket.io')(httpServer);
 var sockets = {};
