@@ -4,11 +4,12 @@
  */
 var express = require('express');
 var http = require('http');
+var path = require('path');
 module.exports = function () {
 	var app = express();
 	app.set('view engine', 'pug');
-	app.set('views', __dirname + '/../client/views');
-	app.use('/static', express.static(__dirname + '/../client/static'));
+	app.set('views', path.normalize(path.join(__dirname, '..', 'client', 'views')));
+	app.use('/static', express.static(path.normalize(path.join(__dirname, '..', 'client', 'static'))));
 	app.get('/', function (req, res) {
 		res.render('index')
 	});
