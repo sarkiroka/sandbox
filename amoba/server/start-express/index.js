@@ -3,9 +3,9 @@
  * @author sarkiroka on 2016.06.09.
  */
 var setupExpress = require('./setup-express');
-var startServer = require('./start-server');
+var startHttpServer = require('./start-http-server');
 module.exports = function () {
 	var app = setupExpress(express);
-	var server = startServer(app);
+	var server = startHttpServer(app);
 	return server;
 };
