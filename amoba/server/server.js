@@ -1,6 +1,9 @@
 var startExpress = require('./start-express/index');
+var setupIo = require('./setup-io');
+
 var httpServer = startExpress();
-var io = require('socket.io')(httpServer);
+var io = setupIo(httpServer);
+
 var sockets = {};
 var users = {};
 var roomCount = 0;
