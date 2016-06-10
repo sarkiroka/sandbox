@@ -5,7 +5,7 @@
 var setupExpress = require('./setup-express');
 var startHttpServer = require('./start-http-server');
 module.exports = function () {
-	var app = setupExpress(express);
-	var server = startHttpServer(app);
-	return server;
+	var app = setupExpress();
+	var httpServer = startHttpServer(app);
+	return httpServer;
 };

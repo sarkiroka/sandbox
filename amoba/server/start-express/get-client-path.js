@@ -4,6 +4,6 @@
  */
 var path = require('path');
 module.exports = function () {
-	var retValue = path.normalize(path.join(__dirname, '..', 'client'));
+	var retValue = path.normalize(path.join(__dirname, '..', '..', 'client'));
 	return retValue;
 };
