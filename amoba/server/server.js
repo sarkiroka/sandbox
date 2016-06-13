@@ -1,5 +1,6 @@
 var startExpress = require('./start-express/index');
 var setupIo = require('./setup-io');
+var onDisconnect = require('./on-disconnect');
 
 var httpServer = startExpress();
 var io = setupIo(httpServer);
@@ -9,14 +10,7 @@ var users = {};
 var roomCount = 0;
 var games = {};
 io.on('connection', function (socket) {
-	socket.on('disconnect', function () {
-		var user = sockets[socket.id];
-		delete sockets[socket.id];
-		if (user) {
-			delete users[user.username];
-		}
-		socket.broadcast.emit('userlist', Object.keys(users));
-	});
+	socket.on('disconnect', onDisconnect(socket,users,sockets));
 	socket.on('username', function (msg) {
 		var validRegex = /^[a-zíéáűőúöüóÍÉÁŰŐÚÖÜÓ]+(?:-\d+)?/i;
 		if (validRegex.test(msg)) {
